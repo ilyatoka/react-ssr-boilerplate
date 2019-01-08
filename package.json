@@ -2,7 +2,6 @@
   "name": "react-ssr-boilerplate",
   "version": "1.0.0",
   "description": "\"React.js app boilerplate with support for code splitting, hot module reload and server side rendering.\"",
-  "main": "index.js",
   "repository": "git@github.com:ilyatoka/react-ssr-boilerplate.git",
   "author": "Ilya Toka <ilyatoka.gm@gmail.com>",
   "contributors": [
@@ -10,14 +9,33 @@
     "Maxim Musayev <shamanu4@gmail.com>"
   ],
   "license": "MIT",
-  "private": false,
+  "private": true,
+  "browserslist": "last 1 versions, > 0.2%, not dead",
+  "scripts": {
+    "build:client": "NODE_ENV=development webpack --config webpack.config.js",
+    "build:server": "NODE_ENV=development BABEL_ENV=server babel src --out-dir ./build/server"
+  },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "autoprefixer": "^9.4.4",
     "babel-loader": "^8.0.5",
+    "babel-plugin-css-modules-transform": "^1.6.2",
+    "clean-webpack-plugin": "^1.0.0",
+    "css-loader": "^2.1.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^7.1.0",
     "webpack": "^4.28.1",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
   }
 }
