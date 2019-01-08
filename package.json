@@ -10,5 +10,14 @@
     "Maxim Musayev <shamanu4@gmail.com>"
   ],
   "license": "MIT",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "webpack": "^4.28.1",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14"
+  }
 }
