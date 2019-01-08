@@ -1,0 +1,14 @@
+{
+  "name": "react-ssr-boilerplate",
+  "version": "1.0.0",
+  "description": "\"React.js app boilerplate with support for code splitting, hot module reload and server side rendering.\"",
+  "main": "index.js",
+  "repository": "git@github.com:ilyatoka/react-ssr-boilerplate.git",
+  "author": "Ilya Toka <ilyatoka.gm@gmail.com>",
+  "contributors": [
+    "Ilya Toka <ilyatoka.gm@gmail.com>",
+    "Maxim Musayev <shamanu4@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": false
+}
