@@ -6,7 +6,7 @@
         [
           "css-modules-transform",
           {
-            "preprocessCss": "./loaders/sass-loader.js",
+            "preprocessCss": "./sass.loader.js",
             "generateScopedName": "[name]__[local]__[hash:base64:5]",
             "extensions": [".scss", ".sass"]
           }
