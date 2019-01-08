@@ -11,6 +11,7 @@ export default function App(props) {
     <section className={styles.app}>
       <div className={styles.container}>
         <h1 className={styles.title}>Hello world from the server</h1>
+        <button onClick={() => console.log("clicked")}>Click</button>
       </div>
     </section>
   );

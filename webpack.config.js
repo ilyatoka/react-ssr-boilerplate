@@ -3,11 +3,11 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 const miniCssExtractPlugin = new MiniCssExtractPlugin({
-  filename: "[name].[hash].css",
-  chunkFilename: "[id].[hash].css"
+  filename: "[name].css",
+  chunkFilename: "[id].css"
 });
 
-const cleanWebpackPlugin = new CleanWebpackPlugin(["build", "dist"]);
+const cleanWebpackPlugin = new CleanWebpackPlugin(["build"]);
 
 module.exports = {
   mode: "development",
@@ -18,7 +18,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: "[name].[hash].js"
+    filename: "[name].js"
   },
 
   resolve: {
