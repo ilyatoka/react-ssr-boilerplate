@@ -38,6 +38,7 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
+    "loadable-components": "^2.2.3",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
