@@ -13,7 +13,7 @@
   "browserslist": "last 1 versions, > 0.2%, not dead",
   "scripts": {
     "build:client:dev": "webpack --config webpack.config.js",
-    "build:server:dev": "BABEL_ENV=server babel src --out-dir ./build/client && babel server --out-dir ./build/server",
+    "build:server:dev": "BABEL_ENV=server babel src/client --out-dir ./build/client && babel src/server --out-dir ./build/server && babel src/shared --out-dir ./build/shared",
     "build:client:prod": "webpack --config webpack.config.js",
     "build:server:prod": "BABEL_ENV=server babel src --out-dir ./dist/client && babel server --out-dir ./dist/server",
     "run:server:dev": "npm run build:client:dev && npm run build:server:dev && node build/server/index.js",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.4.4",

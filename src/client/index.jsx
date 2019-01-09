@@ -1,17 +1,15 @@
-import React from "react";
-import { hydrate } from "react-dom";
-import App from "./components/app";
+// in src/client/index.js
+import { render } from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 
-// Read the state sent with markup
-const state = window.__STATE__;
+import App from "../shared/components/app";
 
-// delete the state from global window object
-delete window.__STATE__;
-
-/**
- * hydrate the page to make sure both server and client
- * side pages are identical. This includes markup checking,
- * react comments to identify elements and more.
- */
-
-hydrate(<App />, document.querySelector("#root"));
+class Main extends Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <App {...this.props} />
+      </BrowserRouter>
+    );
+  }
+}

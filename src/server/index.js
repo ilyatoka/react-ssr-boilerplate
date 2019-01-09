@@ -1,31 +1,33 @@
 import express from "express";
-import path from "path";
-import template from "../client/template.js";
-import render from "../client/server.js";
-import fs from "fs";
+import React from "react";
+import ReactDOMServer from "react-dom/server";
+import { StaticRouter } from "react-router-dom";
 
-const bundleDir = path.join(__dirname, "..", "bundle");
+import App from "../shared/components/app";
+// render is used to inject html in a globale template
+import render from "./render";
 
-const assets = fs.readdirSync(bundleDir);
-const js = assets.filter(file => file.endsWith(".js"));
-const css = assets.filter(file => file.endsWith(".css"));
 const app = express();
+// Serve client.js and vendor.js
+app.use("/assets", express.static("./build"));
 
-// Serving static files
-app.use("/build", express.static(path.resolve(__dirname, "../")));
+app.get("*", (req, res) => {
+  const context = {};
 
-// hide powered by express
-app.disable("x-powered-by");
-// start the server
-app.listen(process.env.PORT || 3000);
+  const appWithRouter = (
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  );
 
-let initialState = {
-  isFetching: false
-};
+  if (context.url) {
+    res.redirect(context.url);
+    return;
+  }
 
-// server rendered home page
-app.get("/", (req, res) => {
-  const { content } = render(initialState);
-  const response = template("Server Rendered Page", content, js, css);
-  res.send(response);
+  const html = ReactDOMServer.renderToString(appWithRouter);
+
+  res.status(200).send(render(html));
 });
+
+app.listen(3000, () => console.log("Demo app listening on port 3000"));

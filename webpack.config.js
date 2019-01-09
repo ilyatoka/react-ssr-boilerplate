@@ -1,22 +1,16 @@
 const path = require("path");
-const webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const srcPath = path.resolve(__dirname, "src");
 const buildPath = path.resolve(__dirname, "build");
 
-const commonsChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
-  name: 'vendor',
-  minChunks: Infinity,
-}),
+const cleanWebpackPlugin = new CleanWebpackPlugin(["build"]);
 
 const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: "[name].[hash].css",
   chunkFilename: "[id].[hash].css"
 });
-
-const cleanWebpackPlugin = new CleanWebpackPlugin(["build"]);
 
 module.exports = {
   context: srcPath,
@@ -24,8 +18,7 @@ module.exports = {
   mode: "development",
 
   entry: {
-    main: `${srcPath}/client/index.jsx`,
-    vendor: ["react", "react-dom", "react-router-dom", "prop-types"]
+    client: `${srcPath}/client/index.jsx`
   },
 
   output: {
@@ -37,6 +30,18 @@ module.exports = {
   resolve: {
     modules: ["node_modules", "src"],
     extensions: [".js", ".jsx"]
+  },
+
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all"
+        }
+      }
+    }
   },
 
   module: {
@@ -69,5 +74,5 @@ module.exports = {
     ]
   },
 
-  plugins: [miniCssExtractPlugin, cleanWebpackPlugin, commonsChunkPlugin]
+  plugins: [miniCssExtractPlugin, cleanWebpackPlugin]
 };
