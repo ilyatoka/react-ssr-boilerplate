@@ -1,6 +1,15 @@
 const path = require("path");
+const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+
+const srcPath = path.resolve(__dirname, "src");
+const buildPath = path.resolve(__dirname, "build");
+
+const commonsChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
+  name: 'vendor',
+  minChunks: Infinity,
+}),
 
 const miniCssExtractPlugin = new MiniCssExtractPlugin({
   filename: "[name].[hash].css",
@@ -10,15 +19,19 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
 const cleanWebpackPlugin = new CleanWebpackPlugin(["build"]);
 
 module.exports = {
+  context: srcPath,
+  target: "web",
   mode: "development",
 
   entry: {
-    main: "./src/index.jsx"
+    main: `${srcPath}/client/index.jsx`,
+    vendor: ["react", "react-dom", "react-router-dom", "prop-types"]
   },
 
   output: {
-    path: path.resolve(__dirname, "build/bundle"),
-    filename: "[name].[hash].js"
+    path: buildPath,
+    filename: "[name].[hash].js",
+    publicPath: "/assets/"
   },
 
   resolve: {
@@ -56,5 +69,5 @@ module.exports = {
     ]
   },
 
-  plugins: [miniCssExtractPlugin, cleanWebpackPlugin]
+  plugins: [miniCssExtractPlugin, cleanWebpackPlugin, commonsChunkPlugin]
 };
