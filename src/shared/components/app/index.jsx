@@ -1,6 +1,7 @@
 import styles from "./app.scss";
 import React from "react";
 import PropTypes from "prop-types";
+import { Route, Switch } from "react-router-dom";
 import * as Routes from "./routes";
 import MainNav from "shared/components/main-nav";
 

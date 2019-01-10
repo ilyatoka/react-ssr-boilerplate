@@ -1,18 +1,16 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"],
-  "plugins": ["@babel/plugin-syntax-dynamic-import"],
-  "env": {
-    "server": {
-      "plugins": [
-        [
-          "css-modules-transform",
-          {
-            "preprocessCss": "./sass.loader.js",
-            "generateScopedName": "[name]__[local]__[hash:base64:5]",
-            "extensions": [".scss", ".sass"]
-          }
-        ]
-      ]
-    }
-  }
+  "presets": ["react", "env"],
+  "plugins": [
+    ["dynamic-import-webpack"],
+    ["syntax-dynamic-import"],
+    [
+      "transform-runtime",
+      {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true,
+        "moduleName": "babel-runtime"
+      }
+    ]
+  ]
 }

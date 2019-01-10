@@ -1,35 +1,35 @@
 const path = require("path");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HTMLWebpackPlugin = require("html-webpack-plugin");
 
 const srcPath = path.resolve(__dirname, "src");
-const buildPath = path.resolve(__dirname, "build");
+const distPath = path.resolve(__dirname, "dist/client");
 
-const cleanWebpackPlugin = new CleanWebpackPlugin(["build"]);
+const cleanWebpackPlugin = new CleanWebpackPlugin(["dist/client"]);
 
-const miniCssExtractPlugin = new MiniCssExtractPlugin({
-  filename: "[name].[hash].css",
-  chunkFilename: "[id].[hash].css"
+const htmlWebpackPlugin = new HTMLWebpackPlugin({
+  template: `${srcPath}/client/index.html`
 });
 
 module.exports = {
   context: srcPath,
   target: "web",
-  mode: "development",
+  mode: "production",
 
   entry: {
     client: `${srcPath}/client/index.jsx`
   },
 
   output: {
-    path: buildPath,
-    filename: "[name].[hash].js",
-    publicPath: "/assets/"
+    path: distPath,
+    filename: "[name].js",
+    publicPath: "/assets/",
+    chunkFilename: "client.[id].js"
   },
 
   resolve: {
     modules: ["node_modules", "src"],
-    extensions: [".js", ".jsx"]
+    extensions: ["*", ".js", ".jsx", ".json"]
   },
 
   optimization: {
@@ -37,8 +37,9 @@ module.exports = {
       cacheGroups: {
         commons: {
           test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          chunks: "all"
+          name: "vendor",
+          chunks: "all",
+          filename: "vendor.js"
         }
       }
     }
@@ -54,7 +55,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          "style-loader",
           {
             loader: "css-loader",
             options: {
@@ -74,5 +75,5 @@ module.exports = {
     ]
   },
 
-  plugins: [miniCssExtractPlugin, cleanWebpackPlugin]
+  plugins: [cleanWebpackPlugin, htmlWebpackPlugin]
 };

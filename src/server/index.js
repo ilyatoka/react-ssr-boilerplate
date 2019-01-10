@@ -2,16 +2,15 @@ import express from "express";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
+import { getLoadableState } from "loadable-components/server";
 
 import App from "../shared/components/app";
-// render is used to inject html in a globale template
 import render from "./render";
 
 const app = express();
-// Serve client.js and vendor.js
-app.use("/assets", express.static("./build"));
+app.use("/assets", express.static("./dist/client"));
 
-app.get("*", (req, res) => {
+app.get("*", async (req, res) => {
   const context = {};
 
   const appWithRouter = (
@@ -25,9 +24,10 @@ app.get("*", (req, res) => {
     return;
   }
 
+  const loadableState = await getLoadableState(appWithRouter);
   const html = ReactDOMServer.renderToString(appWithRouter);
 
-  res.status(200).send(render(html));
+  res.status(200).send(render(html, loadableState));
 });
 
 app.listen(3000, () => console.log("Demo app listening on port 3000"));
