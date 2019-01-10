@@ -1,16 +1,23 @@
+const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ExtractCssChunksPlugin = require("extract-css-chunks-webpack-plugin");
 
 const srcPath = path.resolve(__dirname, "src");
 const distPath = path.resolve(__dirname, "dist/server");
 
 const cleanWebpackPlugin = new CleanWebpackPlugin(["dist/server"]);
 
-const miniCssExtractPlugin = new MiniCssExtractPlugin({
+const extractCssChunksPlugin = new ExtractCssChunksPlugin({
   filename: "server.css",
-  chunkFilename: "server.[id].css"
+  chunkFilename: "server.[id].css",
+  orderWarning: true,
+  cssModules: true
+});
+
+const limitChunkCountPlugin = new webpack.optimize.LimitChunkCountPlugin({
+  maxChunks: 1
 });
 
 module.exports = {
@@ -65,7 +72,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          ExtractCssChunksPlugin.loader,
           {
             loader: "css-loader",
             options: {
@@ -74,12 +81,8 @@ module.exports = {
               localIdentName: "[name]__[local]__[hash:base64:5]"
             }
           },
-          {
-            loader: "postcss-loader"
-          },
-          {
-            loader: "sass-loader"
-          }
+          "postcss-loader",
+          "sass-loader"
         ]
       }
     ]
@@ -87,5 +90,5 @@ module.exports = {
 
   externals: nodeExternals(),
 
-  plugins: [cleanWebpackPlugin, miniCssExtractPlugin]
+  plugins: [cleanWebpackPlugin, extractCssChunksPlugin, limitChunkCountPlugin]
 };

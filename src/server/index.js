@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
@@ -8,9 +9,8 @@ import App from "../shared/components/app";
 import render from "./render";
 
 const app = express();
-app.use("/assets", express.static("./dist/client"));
 
-app.get("*", async (req, res) => {
+app.get("*", async (req, res, next) => {
   const context = {};
 
   const appWithRouter = (
@@ -18,6 +18,10 @@ app.get("*", async (req, res) => {
       <App />
     </StaticRouter>
   );
+
+  if (req.url.includes("/assets")) {
+    return next();
+  }
 
   if (context.url) {
     res.redirect(context.url);
@@ -29,5 +33,7 @@ app.get("*", async (req, res) => {
 
   res.status(200).send(render(html, loadableState));
 });
+
+app.use("/assets", express.static(path.join(__dirname, "../client")));
 
 app.listen(3000, () => console.log("Demo app listening on port 3000"));
