@@ -8,7 +8,7 @@ const defaultProps = {};
 
 export default function PageB(props) {
   return (
-    <section className={styles.pageA}>
+    <section className={styles.pageB}>
       <div className={styles.container}>
         <h1 className={styles.title}>Page B</h1>
       </div>
