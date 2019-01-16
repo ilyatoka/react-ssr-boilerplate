@@ -55,7 +55,7 @@ module.exports = {
         options: {
           presets: [
             [
-              "env",
+              "@babel/env",
               {
                 targets: {
                   node: 11
