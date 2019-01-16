@@ -46,10 +46,6 @@ module.exports = {
     extensions: ["*", ".js", ".jsx", ".json"]
   },
 
-  optimization: {
-    minimize: false
-  },
-
   module: {
     rules: [
       {
