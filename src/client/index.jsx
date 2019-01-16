@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { loadComponents } from "loadable-components";
 
-import App from "../shared/components/app";
+import App from "shared/components/app";
 
 class Main extends Component {
   render() {
