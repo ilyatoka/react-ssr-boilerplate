@@ -14,7 +14,7 @@
   "scripts": {
     "build:client": "webpack --config webpack.client.config.js -p",
     "build:server": "webpack --config webpack.server.config.js -p",
-    "run:server:dev": "webpack-dev-server --mode development",
+    "run:server:dev": "",
     "run:server:prod": "node dist/server/server.js"
   },
   "devDependencies": {
