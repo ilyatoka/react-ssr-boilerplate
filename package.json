@@ -14,8 +14,8 @@
   "scripts": {
     "build:client": "webpack --config webpack.client.config.js -p",
     "build:server": "webpack --config webpack.server.config.js -p",
-    "run:server:dev": "",
-    "run:server:prod": "node dist/server/server.js"
+    "server:dev": "",
+    "server:prod": "node dist/server/server.js"
   },
   "devDependencies": {
     "autoprefixer": "^9.4.4",
@@ -35,7 +35,7 @@
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "webpack": "^4.28.1",
+    "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14",
     "webpack-node-externals": "^1.7.2"
