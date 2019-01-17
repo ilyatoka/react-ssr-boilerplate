@@ -13,30 +13,19 @@ import render from "./render";
 const app = express();
 const port = 3000;
 
-//Serve static files
 app.use("/assets", express.static(path.join(__dirname, "../client")));
 app.use("/assets", express.static(path.join(__dirname, "../server")));
 
 app.get("*", async (req, res, next) => {
-  // Take next request if client asked for static file
   if (req.url.includes("/assets")) {
     return next();
   }
 
-  // Hold app context for react-router
   const context = {};
-
-  // Read the 'test' param from the request, if provided
-  const params = qs.parse(req.query);
-  const testParam = parseInt(params.test, 10) || null;
-
-  // Compile an initial state
-  let preloadedState = { app: { test: testParam } };
-
-  // Create a store (with a memory history) from our current url
+  const preloadedState = { app: { test: null } };
   const { store } = configureStore(preloadedState, req.url);
 
-  const jsx = (
+  const html = renderToString(
     <Provider store={store}>
       <StaticRouter location={req.url} context={context}>
         <App />
@@ -44,17 +33,12 @@ app.get("*", async (req, res, next) => {
     </Provider>
   );
 
-  const html = renderToString(jsx);
-
-  // Grab the initial state from our Redux store
   const finalState = store.getState();
 
   if (context.url) {
-    // Somewhere a `<Redirect>` was rendered
     res.redirect(context.url);
     return;
   } else {
-    // we're good, send the response
     res
       .set("content-type", "text/html")
       .status(200)
