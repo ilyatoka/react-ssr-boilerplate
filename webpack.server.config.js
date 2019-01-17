@@ -12,7 +12,6 @@ const cleanWebpackPlugin = new CleanWebpackPlugin(["dist/server"]);
 const extractCssChunksPlugin = new ExtractCssChunksPlugin({
   filename: "server.css",
   chunkFilename: "server.[id].css",
-  orderWarning: true,
   cssModules: true
 });
 
@@ -31,7 +30,7 @@ module.exports = {
 
   output: {
     path: distPath,
-    filename: "[name].js",
+    filename: "server.js",
     publicPath: "/assets/",
     chunkFilename: "server.[id].js"
   },
@@ -84,7 +83,7 @@ module.exports = {
     ]
   },
 
-  externals: nodeExternals(),
+  externals: [nodeExternals()],
 
   plugins: [cleanWebpackPlugin, extractCssChunksPlugin, limitChunkCountPlugin]
 };

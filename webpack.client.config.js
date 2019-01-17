@@ -22,7 +22,7 @@ module.exports = {
 
   output: {
     path: distPath,
-    filename: "[name].js",
+    filename: "client.js",
     publicPath: "/assets/",
     chunkFilename: "client.[id].js"
   },

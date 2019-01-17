@@ -1,39 +1,43 @@
 import path from "path";
 import express from "express";
 import React from "react";
-import ReactDOMServer from "react-dom/server";
+import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
-import { getLoadableState } from "loadable-components/server";
 
-import App from "../shared/components/app";
+import App from "../universal/components/app";
 import render from "./render";
 
 const app = express();
 
+app.use("/assets", express.static(path.join(__dirname, "../client")));
+app.use("/assets", express.static(path.join(__dirname, "../server")));
+
 app.get("*", async (req, res, next) => {
   const context = {};
-
-  const appWithRouter = (
-    <StaticRouter location={req.url} context={context}>
-      <App />
-    </StaticRouter>
-  );
 
   if (req.url.includes("/assets")) {
     return next();
   }
 
+  const jsx = (
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  );
+
+  const html = renderToString(jsx);
+
   if (context.url) {
+    // Somewhere a `<Redirect>` was rendered
     res.redirect(context.url);
     return;
+  } else {
+    // we're good, send the response
+    res
+      .set("content-type", "text/html")
+      .status(200)
+      .send(render(html));
   }
-
-  const loadableState = await getLoadableState(appWithRouter);
-  const html = ReactDOMServer.renderToString(appWithRouter);
-
-  res.status(200).send(render(html, loadableState));
 });
 
-app.use("/assets", express.static(path.join(__dirname, "../client")));
-
-app.listen(3000, () => console.log("Demo app listening on port 3000"));
+app.listen(3000, () => console.log("Express server listening on port 3000"));
