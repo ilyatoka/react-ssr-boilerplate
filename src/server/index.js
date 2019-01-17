@@ -1,31 +1,54 @@
+import qs from "qs";
 import path from "path";
 import express from "express";
 import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
 
 import App from "../universal/components/app";
+import rootReducer from "../universal/store/reducers";
 import render from "./render";
 
 const app = express();
+const port = 3000;
 
+//Serve static files
 app.use("/assets", express.static(path.join(__dirname, "../client")));
 app.use("/assets", express.static(path.join(__dirname, "../server")));
 
 app.get("*", async (req, res, next) => {
-  const context = {};
-
+  // Take next request if client asked for static file
   if (req.url.includes("/assets")) {
     return next();
   }
 
+  // Hold app context for react-router
+  const context = {};
+
+  // Read the 'test' param from the request, if provided
+  const params = qs.parse(req.query);
+  const testParam = parseInt(params.test, 10) || undefined;
+
+  // Compile an initial state
+  let preloadedState = { app: { test: testParam } };
+
+  // Create a new Redux store instance
+  const store = createStore(rootReducer, preloadedState);
+
   const jsx = (
-    <StaticRouter location={req.url} context={context}>
-      <App />
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location={req.url} context={context}>
+        <App />
+      </StaticRouter>
+    </Provider>
   );
 
   const html = renderToString(jsx);
+
+  // Grab the initial state from our Redux store
+  const finalState = store.getState();
 
   if (context.url) {
     // Somewhere a `<Redirect>` was rendered
@@ -36,8 +59,8 @@ app.get("*", async (req, res, next) => {
     res
       .set("content-type", "text/html")
       .status(200)
-      .send(render(html));
+      .send(render(html, finalState));
   }
 });
 
-app.listen(3000, () => console.log("Express server listening on port 3000"));
+app.listen(port, () => console.log("Express server listening on port 3000"));
