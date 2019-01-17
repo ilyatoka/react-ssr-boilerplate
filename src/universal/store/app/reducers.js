@@ -1,7 +1,7 @@
 import { TEST_SUCCESS, TEST_FAILURE } from "./constants";
 
 const initialState = {
-  test: undefined
+  test: null
 };
 
 export default function(state = initialState, action) {

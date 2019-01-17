@@ -29,7 +29,7 @@ app.get("*", async (req, res, next) => {
 
   // Read the 'test' param from the request, if provided
   const params = qs.parse(req.query);
-  const testParam = parseInt(params.test, 10) || undefined;
+  const testParam = parseInt(params.test, 10) || null;
 
   // Compile an initial state
   let preloadedState = { app: { test: testParam } };
