@@ -1,10 +1,19 @@
 import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import { createBrowserHistory, createMemoryHistory } from "history";
+import { routerMiddleware } from "connected-react-router";
+import createRootReducer from "./reducers";
+import { isServer } from "universal/utils/helpers";
 
-import rootReducer from "./reducers";
+export default (preloadedState, url = "/") => {
+  const history = isServer
+    ? createMemoryHistory({
+        initialEntries: [url]
+      })
+    : createBrowserHistory();
 
-export function configureStore(preloadedState) {
-  const middlewares = [];
+  const rootReducer = createRootReducer(history);
+  const middlewares = [routerMiddleware(history)];
   const middlewareEnhancer = applyMiddleware(...middlewares);
 
   const enhancers = [middlewareEnhancer];
@@ -12,5 +21,5 @@ export function configureStore(preloadedState) {
 
   const store = createStore(rootReducer, preloadedState, composedEnhancers);
 
-  return store;
-}
+  return { store, history };
+};

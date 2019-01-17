@@ -5,10 +5,9 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import configureStore from "../universal/store/store";
 
 import App from "../universal/components/app";
-import rootReducer from "../universal/store/reducers";
 import render from "./render";
 
 const app = express();
@@ -34,8 +33,8 @@ app.get("*", async (req, res, next) => {
   // Compile an initial state
   let preloadedState = { app: { test: testParam } };
 
-  // Create a new Redux store instance
-  const store = createStore(rootReducer, preloadedState);
+  // Create a store (with a memory history) from our current url
+  const { store } = configureStore(preloadedState, req.url);
 
   const jsx = (
     <Provider store={store}>

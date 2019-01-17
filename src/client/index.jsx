@@ -1,9 +1,9 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { hydrate } from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { ConnectedRouter } from "connected-react-router";
 import App from "universal/components/app";
-import { configureStore } from "universal/store/store";
+import configureStore from "universal/store/store";
 
 // Grab the state from a global variable injected into the server-generated HTML
 const preloadedState = window.__PRELOADED_STATE__;
@@ -12,13 +12,13 @@ const preloadedState = window.__PRELOADED_STATE__;
 delete window.__PRELOADED_STATE__;
 
 // Create Redux store with initial state
-const store = configureStore(preloadedState);
+const { store, history } = configureStore(preloadedState);
 
 hydrate(
   <Provider store={store}>
-    <BrowserRouter>
+    <ConnectedRouter history={history}>
       <App />
-    </BrowserRouter>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById("root")
 );
