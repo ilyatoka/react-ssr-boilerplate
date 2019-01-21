@@ -1,8 +1,8 @@
-import { combineReducers } from "redux";
-import { connectRouter } from "connected-react-router";
+import { combineReducers } from "redux-immutable";
+import { connectRouter } from "connected-react-router/immutable";
 import appReducer from "./app/reducers";
 
-export default history =>
+export const createRootReducer = history =>
   combineReducers({
     router: connectRouter(history),
     app: appReducer
