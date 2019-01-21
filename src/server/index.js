@@ -1,4 +1,3 @@
-import qs from "qs";
 import path from "path";
 import express from "express";
 import React from "react";
@@ -16,16 +15,24 @@ const port = 3000;
 app.use("/assets", express.static(path.join(__dirname, "../client")));
 app.use("/assets", express.static(path.join(__dirname, "../server")));
 
+app.get("/api/v1/test", (req, res, next) => {
+  res.json("Yay! I'm response from the server API");
+});
+
 app.get("*", async (req, res, next) => {
   if (req.url.includes("/assets")) {
     return next();
   }
+  if (req.url.includes("/favicon.ico")) {
+    return next();
+  }
 
+  let html = "";
   const context = {};
-  const preloadedState = { app: { test: null } };
+  const preloadedState = { app: { test: "Preloaded State" } };
   const { store } = configureStore(preloadedState, req.url);
 
-  const html = renderToString(
+  const appWithRouter = (
     <Provider store={store}>
       <StaticRouter location={req.url} context={context}>
         <App />
@@ -33,17 +40,28 @@ app.get("*", async (req, res, next) => {
     </Provider>
   );
 
-  const finalState = store.getState();
+  // First render to catch in-app Redirects
+  html = renderToString(appWithRouter);
 
   if (context.url) {
     res.redirect(context.url);
     return;
-  } else {
+  }
+
+  // .done is resolved when store.close() send an END event
+  store.serverRunSaga().done.then(() => {
+    // Second render
+    html = renderToString(appWithRouter);
+    const finalState = store.getState();
+
     res
       .set("content-type", "text/html")
       .status(200)
       .send(render(html, finalState));
-  }
+  });
+
+  // Dispatch a close event so sagas stop listening after they're resolved
+  store.serverStopSaga();
 });
 
 app.listen(port, () => console.log("Express server listening on port 3000"));
