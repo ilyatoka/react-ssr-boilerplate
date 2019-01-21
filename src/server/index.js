@@ -4,6 +4,7 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import { Helmet } from "react-helmet";
 import configureStore from "../universal/store/store";
 
 import App from "../universal/components/app";
@@ -53,11 +54,12 @@ app.get("*", async (req, res, next) => {
     // Second render
     html = renderToString(appWithRouter);
     const finalState = store.getState();
+    const helmet = Helmet.renderStatic();
 
     res
       .set("content-type", "text/html")
       .status(200)
-      .send(render(html, finalState));
+      .send(render(html, finalState, helmet));
   });
 
   // Dispatch a close event so sagas stop listening after they're resolved

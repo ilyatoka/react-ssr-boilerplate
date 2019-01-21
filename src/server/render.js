@@ -1,9 +1,11 @@
-export default (html, preloadedState) => `
+export default (html, preloadedState, helmet) => `
     <!doctype html>
     <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <title>React SSR Boilerplate</title>
+            ${helmet.title.toString()}
+            ${helmet.meta.toString()}
+            ${helmet.link.toString()}
             <link rel="stylesheet" type="text/css" href="/assets/server.css">
         </head>
         <body>
